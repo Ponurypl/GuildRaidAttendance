@@ -1,4 +1,4 @@
-local GRA, gra = unpack(select(2, ...))
+local GRA, gra, SYNC = unpack(select(2, ...))
 local L = select(2, ...).L
 local LGN = LibStub:GetLibrary("LibGuildNotes")
 
@@ -276,13 +276,22 @@ importBtn:SetScript("OnClick", function()
 				else -- loot council
 					_G[GRA_R_Roster][n] = {["class"]=t.class, ["role"]="DPS"}
 				end
+				_G[GRA_R_Deleted] = GRA:RemoveElementsByKeys(_G[GRA_R_Deleted], {n});
 			else
 				GRA:Print(L["Failed to import, %s is not in your guild."]:format(GRA:GetClassColoredName(n, t.class)))
 			end
+
+			_G[GRA_R_Roster][n]["lastchange"] = time();			
 		elseif _G[GRA_R_Roster][n] then  -- already exists, t.checked = false, then delete it
 			_G[GRA_R_Roster] = GRA:RemoveElementsByKeys(_G[GRA_R_Roster], {n})
+			_G[GRA_R_Deleted][n] = time();
 		end
 	end
+
+	if not GRA:TableIsEmpty(modified) then
+		SYNC:GenerateNewRosterVersion();		
+	end
+
 	wipe(modified) -- imported, empty this table
 	importFrame:Hide()
 	

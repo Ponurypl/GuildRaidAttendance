@@ -8,7 +8,7 @@ if not lib then return end
 
 lib.callbacks = lib.callbacks or LibStub("CallbackHandler-1.0"):New(lib)
 --@debug@
-local debug = true
+local debug = false
 --@end-debug@
 local function Print(msg, f)
 	if debug then
@@ -51,9 +51,9 @@ local function SetNote(noteType, name, note, isRetry)
 	
 	local index = cache[name][3]
 
-	if GuildRosterFrame and GuildRosterFrame:IsVisible() then 
+	if GuildFrame and GuildFrame:IsVisible() then 
 		SetGuildRosterShowOffline(true)
-		GuildRosterShowOfflineButton:SetChecked(true)
+		GuildFrameLFGButton:SetChecked(true)
 	end
 
 	-- check correctness, make sure it is THE ONE.
@@ -143,9 +143,9 @@ end
 f:SetScript("OnEvent", function(self, event)
 	if event == "GUILD_ROSTER_UPDATE" then
 		-- make sure to get all guild members correctly
-		if not GuildRosterFrame then
+		if not GuildFrame then
 			SetGuildRosterShowOffline(true)
-		elseif not GuildRosterFrame:IsVisible() then
+		elseif not GuildFrame:IsVisible() then
 			SetGuildRosterShowOffline(true)
 		end
 
@@ -194,16 +194,16 @@ f:SetScript("OnEvent", function(self, event)
 end)
 
 local showOffline = false
-hooksecurefunc("GuildFrame_LoadUI", function()
-	GuildRosterFrame:HookScript("OnShow", function()
-		SetGuildRosterShowOffline(showOffline)
-		GuildRosterShowOfflineButton:SetChecked(showOffline)
-		GuildRoster_Update()
-	end)
-	GuildRosterFrame:HookScript("OnHide", function()
-		SetGuildRosterShowOffline(true)
-	end)
-	GuildRosterShowOfflineButton:HookScript("OnClick", function()
-		showOffline = GuildRosterShowOfflineButton:GetChecked()
-	end)
+GuildFrame:HookScript("OnShow", function()
+	SetGuildRosterShowOffline(showOffline);
+	GuildFrameLFGButton:SetChecked(showOffline);
+	GuildStatus_Update();
+end)
+
+GuildFrame:HookScript("OnHide", function()
+	SetGuildRosterShowOffline(true)
+end)
+
+GuildFrameLFGButton:HookScript("OnClick", function()
+	showOffline = GuildFrameLFGButton:GetChecked()
 end)

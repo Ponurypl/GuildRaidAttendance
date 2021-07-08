@@ -1,8 +1,9 @@
 local addonName, E =  ...
-local GRA, gra = {}, {}
+local GRA, gra, SYNC = {}, {}, {}
 -- just to make sure they're the first 2
 E[1] = GRA -- functions
 E[2] = gra -- global variables, frames...
+E[3] = SYNC
 
 --@debug@
 local debugMode = true
@@ -10,7 +11,7 @@ local debugMode = true
 function GRA:Debug(arg, ...)
 	if debugMode then
 		if type(arg) == "string" or type(arg) == "number" then
-			print(arg)
+			GRA:Print(string.format("|cffa8168d(Debug)|r "..arg, ...));
 		elseif type(arg) == "function" then
 			arg(...)
 		elseif arg == nil then
@@ -229,6 +230,16 @@ function GRA:UpdateFont()
 	end
 end
 
+function GRA:GenerateSID()
+	local seed={'0','1','2','3','4','5','6','7','8','9','a','b','c','d','e','f'};
+    local tb={};
+    for i=1,32 do
+        table.insert(tb,seed[math.random(1,16)]);
+    end
+    return table.concat(tb);
+end
+
+
 -----------------------------------------
 -- LDB
 -----------------------------------------
@@ -255,6 +266,7 @@ frame:RegisterEvent("ADDON_LOADED")
 -- initialize!
 function frame:ADDON_LOADED(arg1)
 	if arg1 == addonName then
+
 		frame:UnregisterEvent("ADDON_LOADED")
 		if type(GRA_A_Variables) ~= "table" then GRA_A_Variables = {} end
 		if type(GRA_Variables) ~= "table" then GRA_Variables = {} end
@@ -263,11 +275,13 @@ function frame:ADDON_LOADED(arg1)
 		if type(GRA_A_Archived) ~= "table" then GRA_A_Archived = {} end
 		if type(GRA_A_Roster) ~= "table" then GRA_A_Roster = {} end
 		if type(GRA_A_Config) ~= "table" then GRA_A_Config = {} end
+		if type(GRA_A_Deleted) ~= "table" then GRA_A_Deleted = {} end
 		-- character saved variables
 		if type(GRA_RaidLogs) ~= "table" then GRA_RaidLogs = {} end
 		if type(GRA_Archived) ~= "table" then GRA_Archived = {} end
 		if type(GRA_Roster) ~= "table" then GRA_Roster = {} end
 		if type(GRA_Config) ~= "table" then GRA_Config = {} end
+		if type(GRA_Deleted) ~= "table" then GRA_Deleted = {} end
 
 		if type(GRA_Variables["useAccountProfile"]) ~= "boolean" then GRA_Variables["useAccountProfile"] = false end
 		-- init RUNTIME tables
@@ -276,11 +290,13 @@ function frame:ADDON_LOADED(arg1)
 			GRA_R_Archived = "GRA_A_Archived"
 			GRA_R_Roster = "GRA_A_Roster"
 			GRA_R_Config = "GRA_A_Config"
+			GRA_R_Deleted = "GRA_A_Deleted"
 		else
 			GRA_R_RaidLogs = "GRA_RaidLogs"
 			GRA_R_Archived = "GRA_Archived"
 			GRA_R_Roster = "GRA_Roster"
 			GRA_R_Config = "GRA_Config"
+			GRA_R_Deleted = "GRA_Deleted"
 		end
 
 		-- help viewed
@@ -356,9 +372,22 @@ function frame:ADDON_LOADED(arg1)
 			_G[GRA_R_Config]["arCalculationMethod"] = "A"
 		end
 
+		if type(_G[GRA_R_Config]["raidVersion"]) ~= "string" then
+			_G[GRA_R_Config]["raidVersion"] = GRA:GenerateSID();
+		end
+
+		if type(_G[GRA_R_Config]["raidEditDate"]) ~= "number" then
+			_G[GRA_R_Config]["raidEditDate"] = 0
+		end
+
+		if type(_G[GRA_R_Config]["rosterVersion"]) ~= "string" then
+			_G[GRA_R_Config]["rosterVersion"] = GRA:GenerateSID();
+		end
+
 		gra.version = GetAddOnMetadata(addonName, "version")
 
 		GRA:UpdateFont()
+		SYNC:Init();
 	end
 end
 

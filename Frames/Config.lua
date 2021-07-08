@@ -73,19 +73,26 @@ importBtn:SetScript("OnClick", function()
 	gra.importFrame:Show()
 end)
 
-local sendRosterBtn = GRA:CreateButton(rosterAdminFrame, L["Send"], nil, {61, 18}, "GRA_FONT_SMALL", false,
-	L["Send roster data to raid members"],
-	L["GRA must be installed to receive data."],
-	L["Raid members data (including attendance rate)."],
-	gra.colors.firebrick.s .. L["Raid schedule settings."],
-	gra.colors.firebrick.s .. L["Loot system settings (important)."])
-sendRosterBtn:SetPoint("LEFT", importBtn, "RIGHT", -1, 0)
-sendRosterBtn:SetScript("OnClick", function()
-	local confirm = GRA:CreateConfirmPopup(configFrame, configFrame:GetWidth()-10, L["Send raid roster data to raid/party members?"], function()
-		GRA:SendRosterToRaid()
-	end, true)
-	confirm:SetPoint("TOPRIGHT", sendRosterBtn)
+local syncBtn = GRA:CreateButton(rosterAdminFrame, L["Sync"], nil, {61, 18}, "GRA_FONT_SMALL")
+syncBtn:SetPoint("LEFT", importBtn, "RIGHT", -1, 0)
+syncBtn:SetScript("OnClick", function()
+	configFrame:Hide()
+	gra.syncStateFrame:Show()
 end)
+
+-- local sendRosterBtn = GRA:CreateButton(rosterAdminFrame, L["Send"], nil, {61, 18}, "GRA_FONT_SMALL", false,
+-- 	L["Send roster data to raid members"],
+-- 	L["GRA must be installed to receive data."],
+-- 	L["Raid members data (including attendance rate)."],
+-- 	gra.colors.firebrick.s .. L["Raid schedule settings."],
+-- 	gra.colors.firebrick.s .. L["Loot system settings (important)."])
+-- sendRosterBtn:SetPoint("LEFT", importBtn, "RIGHT", -1, 0)
+-- sendRosterBtn:SetScript("OnClick", function()
+-- 	local confirm = GRA:CreateConfirmPopup(configFrame, configFrame:GetWidth()-10, L["Send raid roster data to raid/party members?"], function()
+-- 		GRA:SendRosterToRaid()
+-- 	end, true)
+-- 	confirm:SetPoint("TOPRIGHT", sendRosterBtn)
+-- end)
 
 -- local exportBtn = GRA:CreateButton(rosterAdminFrame, L["Export CSV"], "red", {91, 20}, "GRA_FONT_SMALL")
 -- exportBtn:SetPoint("TOPLEFT", editBtn, "BOTTOMLEFT", 0, -5)
@@ -343,7 +350,6 @@ lootDistrBtn:SetScript("OnClick", function()
 		gra.lootDistrConfigFrame:Show()
 	end
 end)
-lootDistrBtn:SetEnabled(false)
 
 -- String: version
 local version = configFrame:CreateFontString(nil, "OVERLAY", "GRA_FONT_SMALL")
@@ -372,7 +378,7 @@ local anchorBtn = GRA:CreateButton(configFrame, L["Anchor"], "red", {57, 20}, "G
 anchorBtn:SetPoint("RIGHT", profilesBtn, "LEFT", -5, 0)
 anchorBtn:SetScript("OnClick", function()
 	GRA:ShowHidePopupsAnchor()
-	-- GRA:ShowHideFloatButtonsAnchor()
+	GRA:ShowHideFloatButtonsAnchor()
 end)
 
 local helpBtn = GRA:CreateButton(configFrame, L["Help"], "red", {57, 20}, "GRA_FONT_SMALL")
@@ -424,7 +430,7 @@ configFrame:SetScript("OnUpdate", function(self, elapsed)
 	local f = GRA:Getn(_G[GRA_R_Roster]) ~= 0
 	editBtn:SetEnabled(f)
 	-- disabled while sending
-	sendRosterBtn:SetEnabled(f and IsInGroup("LE_PARTY_CATEGORY_HOME") and not gra.sending)
+	-- sendRosterBtn:SetEnabled(f and IsInGroup("LE_PARTY_CATEGORY_HOME") and not gra.sending)
 end)
 
 -----------------------------------------

@@ -89,6 +89,7 @@ configBtn:SetScript("OnClick", function()
 	-- gra.dkpOptionsFrame:Hide()
 	gra.rosterEditorFrame:Hide()
 	gra.appearanceFrame:Hide()
+	gra.syncStateFrame:Hide()
 	if gra.configFrame:IsShown() then
 		gra.configFrame:Hide()
 	else
@@ -180,36 +181,36 @@ GRA:RegisterEvent("GRA_TRACK",  "Main_TrackStatus", function(raidDate)
 end)
 
 -- invite button
-local inviteBtn = GRA:CreateButton(gra.mainFrame.header, "INVITE", "red-hover", {60, 22}, "GRA_FONT_PIXEL")
-inviteBtn:SetPoint("LEFT", trackBtn, "RIGHT", -1, 0)
-inviteBtn:Hide()
+-- local inviteBtn = GRA:CreateButton(gra.mainFrame.header, "INVITE", "red-hover", {60, 22}, "GRA_FONT_PIXEL")
+-- inviteBtn:SetPoint("LEFT", trackBtn, "RIGHT", -1, 0)
+-- inviteBtn:Hide()
 
-inviteBtn:SetScript("OnClick", function()
-	C_PartyInfo.ConvertToRaid()
-	inviteBtn:RegisterEvent("GROUP_ROSTER_UPDATE")
+-- inviteBtn:SetScript("OnClick", function()
+-- 	C_PartyInfo.ConvertToRaid()
+-- 	inviteBtn:RegisterEvent("GROUP_ROSTER_UPDATE")
 	
-	local onlineMembers = GRA:GetGuildOnlineRoster()
-	local myName = strjoin("-", UnitFullName("player"))
+-- 	local onlineMembers = GRA:GetGuildOnlineRoster()
+-- 	local myName = strjoin("-", UnitFullName("player"))
 
-	for n, _ in pairs(_G[GRA_R_Roster]) do
-		if n ~= myName and onlineMembers[n] and not(UnitInParty(GRA:GetShortName(n)) or UnitInRaid(GRA:GetShortName(n))) then
-			C_PartyInfo.InviteUnit(n)
-		end
-	end
-	wipe(onlineMembers)
-end)
+-- 	for n, _ in pairs(_G[GRA_R_Roster]) do
+-- 		if n ~= myName and onlineMembers[n] and not(UnitInParty(GRA:GetShortName(n)) or UnitInRaid(GRA:GetShortName(n))) then
+-- 			C_PartyInfo.InviteUnit(n)
+-- 		end
+-- 	end
+-- 	wipe(onlineMembers)
+-- end)
 
-inviteBtn:SetScript("OnEvent", function()
-	if not IsInRaid() then
-		C_PartyInfo.ConvertToRaid()
-		inviteBtn:UnregisterEvent("GROUP_ROSTER_UPDATE")
-	end
-end)
+-- inviteBtn:SetScript("OnEvent", function()
+-- 	if not IsInRaid() then
+-- 		C_PartyInfo.ConvertToRaid()
+-- 		inviteBtn:UnregisterEvent("GROUP_ROSTER_UPDATE")
+-- 	end
+-- end)
 
 GRA:RegisterEvent("GRA_PERMISSION", "MainFrame_CheckPermissions", function(isAdmin)
 	if isAdmin then
 		trackBtn:Show()
-		inviteBtn:Show()
+		--inviteBtn:Show()
 	end
 end)
 

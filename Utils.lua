@@ -153,6 +153,10 @@ function GRA:GetIndex(t, e)
 	return nil
 end
 
+function GRA:TableIsEmpty(table)
+	return next(table) == nil;
+end
+
 function GRA:Copy(t)
 	local newTbl = {}
 	for k, v in pairs(t) do
@@ -274,15 +278,29 @@ function GRA:GetGuildRoster(rank)
 	return roster
 end
 
-function GRA:GetGuildOnlineRoster()
+function GRA:GetGuildOnlineRoster(shortNames)
+	shortNames = shortNames or false;
+
 	local roster = {}
 	for i = 1, GetNumGuildMembers() do
 		local fullName, _, _, _, _, _, _, _, isOnline = GetGuildRosterInfo(i)
 		if isOnline then
-			roster[fullName] = true
+			if shortNames then
+				roster[GRA:GetShortName(fullName)] = true;
+			else
+				roster[fullName] = true
+			end			
 		end
 	end
 	return roster
+end
+
+function GRA:CheckIfGuildMemberOnline(player, shortName)
+	local roster = GRA:GetGuildOnlineRoster(shortName);
+	if roster[player] ~= nil then
+		return true;
+	end
+	return false;
 end
 
 function GRA:GetShortName(fullName)

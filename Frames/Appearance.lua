@@ -82,8 +82,8 @@ function GRA:SetScale(factor)
     gra.whatsNewFrame:SetScale(scale)           -- gra.whatsNewFrame.scaleFactor = factor
     gra.exportFrame:SetScale(scale)             gra.exportFrame.scaleFactor = factor
     -- loot distr
-    -- gra.distributionFrame:SetScale(scale)
-    -- gra.lootFrame:SetScale(scale)
+    gra.distributionFrame:SetScale(scale)
+    gra.lootFrame:SetScale(scale)
     -- popup
     gra.popupsAnchor:SetScale(scale)
     -- static popup
@@ -93,7 +93,7 @@ function GRA:SetScale(factor)
     -- context menu
     if gra.contextMenu then gra.contextMenu:SetScale(scale) end
     -- float buttons
-    -- gra.floatButtonsAnchor:SetScale(scale)
+    gra.floatButtonsAnchor:SetScale(scale)
 end
 
 local scaleSection = appearanceFrame:CreateFontString(nil, "OVERLAY", "GRA_FONT_SMALL")

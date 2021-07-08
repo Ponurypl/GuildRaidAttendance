@@ -14,7 +14,6 @@ function GRA:StylizeFrame(frame, color, border, shadowOffset)
 	if not border or type(border) ~= "table" then
 		border = {0, 0, 0, 1}
 	end
-
 	frame:SetBackdrop({bgFile = "Interface\\Buttons\\WHITE8x8", edgeFile = "Interface\\Buttons\\WHITE8x8", edgeSize = 1})
     frame:SetBackdropColor(unpack(color))
 	frame:SetBackdropBorderColor(unpack(border))

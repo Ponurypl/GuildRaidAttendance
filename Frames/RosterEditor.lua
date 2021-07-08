@@ -1,4 +1,4 @@
-local GRA, gra = unpack(select(2, ...))
+local GRA, gra, SYNC = unpack(select(2, ...))
 local L = select(2, ...).L
 
 local CLASS_ROLES = {
@@ -161,12 +161,17 @@ local function Delete()
     for n, t in pairs(_G[GRA_R_Roster]) do
         if t["altOf"] then
             if GRA:GetIndex(names, t["altOf"]) then -- main is deleted
-                t["altOf"] = nil
+                t["altOf"] = nil                
+                t["lastchange"] = time();
             end
         end
     end
 
     _G[GRA_R_Roster] = GRA:RemoveElementsByKeys(_G[GRA_R_Roster], names)
+    
+    for i, v in ipairs(names) do
+        _G[GRA_R_Deleted][v] = time();
+    end
 end
 
 --------------------------------------------------
@@ -212,6 +217,7 @@ local function Rename()
     -- rename in _G[GRA_R_Roster]
     for oldName, newName in pairs(renamed) do
         _G[GRA_R_Roster][newName[1]] = _G[GRA_R_Roster][oldName]
+        _G[GRA_R_Roster][newName[1]]["lastchange"] = time();
     end
     _G[GRA_R_Roster] = GRA:RemoveElementsByKeys(_G[GRA_R_Roster], names)
 end
@@ -222,6 +228,7 @@ end
 local function SetRole()
     for n, t in pairs(roleChanged) do
         _G[GRA_R_Roster][n]["role"] = t[1]
+        _G[GRA_R_Roster][n]["lastchange"] = time();
     end
 end
 
@@ -235,6 +242,7 @@ local function SetMain()
         else -- delete main
             _G[GRA_R_Roster][n]["altOf"] = nil
         end
+        _G[GRA_R_Roster][n]["lastchange"] = time();
     end
     if GRA:Getn(mainChanged) ~= 0 then
         GRA:UpdateMainAlt()
@@ -249,6 +257,7 @@ end
 local function SetClass()
     for n, t in pairs(classChanged) do
         _G[GRA_R_Roster][n]["class"] = t[1]
+        _G[GRA_R_Roster][n]["lastchange"] = time();
     end
 end
 
@@ -333,6 +342,8 @@ local function SaveChanges()
         SetClass()
         -- load and show
         LoadRoster()
+
+        SYNC:GenerateNewRosterVersion();
         
         -- show msg
         if GRA:Getn(deleted) ~= 0 then

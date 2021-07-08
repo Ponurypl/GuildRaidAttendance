@@ -83,10 +83,12 @@ switchAndOverrideBtn:SetScript("OnClick", function()
             GRA_RaidLogs = GRA_A_RaidLogs
             GRA_Roster = GRA_A_Roster
             GRA_Config = GRA_A_Config
+            GRA_Deleted = GRA_A_Deleted;
         else
             GRA_A_RaidLogs = GRA_RaidLogs
             GRA_A_Roster = GRA_Roster
             GRA_A_Config = GRA_Config
+            GRA_A_Deleted = GRA_Deleted;
         end
 
         GRA_Variables["useAccountProfile"] = not GRA_Variables["useAccountProfile"]
